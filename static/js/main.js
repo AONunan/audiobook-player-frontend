@@ -1,7 +1,7 @@
 function setInitialValues(author, book, track, initialTimestamp) {
   // Expand library sections
   document.getElementById(author + "_list").style.display = "block";
-  document.getElementById(book + "_list").style.display = "block";
+  document.getElementById(author + "/" + book + "_list").style.display = "block";
 
   // Highlight current track in library
   document.getElementById(author).style.color = "red";

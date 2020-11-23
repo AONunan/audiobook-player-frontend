@@ -29,7 +29,7 @@
 
       <div class="authorSection">
 
-        <li id="{{author_key}}" class="authorLabel" onclick="showHideSection(this.innerHTML + '_list')">{{author_key}}
+        <li id="{{author_key}}" class="authorLabel" onclick="showHideSection(this.id + '_list')">{{author_key}}
         </li>
 
         <ul style="display:none;" id="{{author_key}}_list">
@@ -39,10 +39,9 @@
 
           <div class="bookSection">
 
-            <li id="{{author_key}}/{{book_key}}" class="bookLabel" onclick="showHideSection(this.innerHTML + '_list')">
-              {{book_key}}</li>
+            <li id="{{author_key}}/{{book_key}}" class="bookLabel" onclick="showHideSection(this.id + '_list')">{{book_key}}</li>
 
-            <ul style="display:none;" id="{{book_key}}_list">
+            <ul style="display:none;" id="{{author_key}}/{{book_key}}_list">
 
               <!-- Display all tracks as list items -->
               {% for track in book_value %}

@@ -1,10 +1,7 @@
 body {
-  background-color: rgb(49, 49, 49);
+  background-color: rgb(0, 0, 0);
   color: rgb(255, 255, 255);
-
   font-family: Arial, Helvetica, sans-serif;
-
-  /* font-size:10vw; */
 }
 
 audio {
@@ -12,41 +9,52 @@ audio {
 }
 
 .authorSection {
-  /* border-style: dotted; */
-  padding: 20px;
-  border-style: solid;
+  /* padding: 20px; */
+  /* border-style: solid; */
+  background-color: rgb(25, 25, 25);
+  padding: 10px;
+  margin: 10px;
 }
 
 .bookSection {
-  /* border-style: dotted; */
+  background-color: rgb(50, 50, 50);
   padding: 10px;
+  margin: 10px;
 }
 
-.trackItem {
+.trackLabel {
   padding: 5px;
 }
 
 ul {
   list-style-type: none; /* remove bullet points */
-  list-style-position: outside;
+  padding-left: 0;
 }
 
-div#mediaPlayer {
-  background-color: rgb(26, 26, 26);
-  width: 100%;
+
+#library {
+  padding-bottom: 20vh;
+}
+
+#mediaPlayer {
+  background-color: rgb(25, 25, 25);
   position: fixed;
   bottom: 0;
+  width: 100%;
+  height: 20vh;
 }
 
-/* .grid-container {
-  display: grid;
-  grid-template-rows: 25% 50% 25%;
-} */
+
+
 
 #mediaButtons {
   width: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: stretch;
 }
 
 button {
-  width: 15%;
+  flex: 1;
+  background-color: rgb(146, 0, 0);
 }

@@ -9,15 +9,15 @@
 
 {% block body %}
 
-<div class="grid-container">
+<div class="flexbox-container">
 
-  <div id="header" class="grid-item">
+  <div id="header">
 
     <h1>Audiobook player</h1>
     <p>Welcome {{myname}}!</p>
   </div>
 
-  <div id="library" class="grid-item">
+  <div id="library">
 
     <h2>Library</h2>
 
@@ -29,7 +29,8 @@
 
       <div class="authorSection">
 
-        <li onclick="showHideSection(this.innerHTML + '_list')">{{author_key}}</li>
+        <li id="{{author_key}}" class="authorLabel" onclick="showHideSection(this.innerHTML + '_list')">{{author_key}}
+        </li>
 
         <ul style="display:none;" id="{{author_key}}_list">
 
@@ -38,13 +39,14 @@
 
           <div class="bookSection">
 
-            <li onclick="showHideSection(this.innerHTML + '_list')">{{book_key}}</li>
+            <li id="{{author_key}}/{{book_key}}" class="bookLabel" onclick="showHideSection(this.innerHTML + '_list')">
+              {{book_key}}</li>
 
             <ul style="display:none;" id="{{book_key}}_list">
 
               <!-- Display all tracks as list items -->
               {% for track in book_value %}
-              <li class="trackItem" id="{{author_key}}/{{book_key}}/{{track}}" onclick="playTrack(
+              <li class="trackLabel" id="{{author_key}}/{{book_key}}/{{track}}" onclick="playTrack(
                 this.id.split('/')[0], // Author
                 this.id.split('/')[1], // Book
                 this.id.split('/')[2], // Track
@@ -66,7 +68,7 @@
 
   </div>
 
-  <div id="mediaPlayer" class="grid-item">
+  <div id="mediaPlayer">
 
     <audio controls id="player">
       <source
@@ -81,23 +83,14 @@
       <button onclick="mediaControls('previousTrack')">⏮</button>
       <button onclick="mediaControls('rewind')">⏪</button>
       <button onclick="mediaControls('togglePlayPause')">⏯</button>
-      <button onclick="mediaControls('fastForward')">⏩</button>
+      <button onclick="mediaControls('fastForward')">⏩︎</button>
       <button onclick="mediaControls('nextTrack')">⏭</button>
     </div>
 
-    <p>Currently playing:</p>
-
-    <table>
+    <table style="width: 100%; text-align: center;">
       <tr>
-        <td><b>Author</b></td>
         <td id="currentlyPlayingAuthor">{{current_track["author"]}}</td>
-      </tr>
-      <tr>
-        <td><b>Book</b></td>
         <td id="currentlyPlayingBook">{{current_track["book"]}}</td>
-      </tr>
-      <tr>
-        <td><b>Track</b></td>
         <td id="currentlyPlayingTrack">{{current_track["track"]}}</td>
       </tr>
     </table>
@@ -105,10 +98,11 @@
 
 </div>
 
-<script src="{{url_for('static', filename='js/main.js')}}" onload="expandCurrentlyPlayingSectionOfLibrary(
+<script src="{{url_for('static', filename='js/main.js')}}" onload="setInitialValues(
   '{{current_track["author"]}}',
   '{{current_track["book"] | replace("'", "\\'")}}',
-  '{{current_track["track"]}}'
+  '{{current_track["track"]}}',
+  '{{current_track["timestamp"]}}'
   )"></script>
 
 

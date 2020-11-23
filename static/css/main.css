@@ -1,0 +1,52 @@
+body {
+  background-color: rgb(49, 49, 49);
+  color: rgb(255, 255, 255);
+
+  font-family: Arial, Helvetica, sans-serif;
+
+  /* font-size:10vw; */
+}
+
+audio {
+  width: 100%;
+}
+
+.authorSection {
+  /* border-style: dotted; */
+  padding: 20px;
+  border-style: solid;
+}
+
+.bookSection {
+  /* border-style: dotted; */
+  padding: 10px;
+}
+
+.trackItem {
+  padding: 5px;
+}
+
+ul {
+  list-style-type: none; /* remove bullet points */
+  list-style-position: outside;
+}
+
+div#mediaPlayer {
+  background-color: rgb(26, 26, 26);
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+}
+
+/* .grid-container {
+  display: grid;
+  grid-template-rows: 25% 50% 25%;
+} */
+
+#mediaButtons {
+  width: 100%;
+}
+
+button {
+  width: 15%;
+}

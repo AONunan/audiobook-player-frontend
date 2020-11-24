@@ -72,27 +72,33 @@ function mediaControls(action) {
       break;
 
     case "togglePlayPause":
+
+      let playPauseButton = document.getElementById("playPauseButton");
+
       if (mediaPlayer.paused) {
         mediaPlayer.play();
 
         if (pauseTimestamp != 0) {
-          let timeSinceLastPause = Date.now()/1000 - pauseTimestamp; // Check how long it's been since the media player was paused
+          let timeSinceLastPause = Date.now() / 1000 - pauseTimestamp; // Check how long it's been since the media player was paused
           let rewindAmount = 0;
-          
+
           if (timeSinceLastPause > 20) {
             rewindAmount = 10; // Rewind by a maximum of 10 seconds
           } else {
             rewindAmount = timeSinceLastPause / 2;
           }
-          
+
           console.log("Rewinding media player by:", rewindAmount, "seconds");
           mediaPlayer.currentTime -= rewindAmount;
         }
+        playPauseButton.innerHTML = "⏸️";
+        
       } else {
         mediaPlayer.pause();
-        pauseTimestamp = Date.now()/1000; // Log the time the media player was paused
+        pauseTimestamp = Date.now() / 1000; // Log the time the media player was paused
+        playPauseButton.innerHTML = "▶️";
       }
-      
+
       break;
 
     case "fastForward":

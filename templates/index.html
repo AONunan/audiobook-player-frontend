@@ -46,12 +46,12 @@
 
               <!-- Display all tracks as list items -->
               {% for track in book_value %}
-              <li class="trackLabel" id="{{author_key}}/{{book_key}}/{{track}}" onclick="playTrack(
+              <li class="trackLabel" id="{{author_key}}/{{book_key}}/{{track["track_filename"]}}" onclick="playTrack(
                 this.id.split('/')[0], // Author
                 this.id.split('/')[1], // Book
                 this.id.split('/')[2], // Track
                 this.id.split('/')[0]
-                )">{{track}}</li>
+                )">{{track["track_filename"]}} ({{track["track_length"]}})</span></li>
               {% endfor %}
 
             </ul>

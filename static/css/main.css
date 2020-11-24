@@ -58,10 +58,7 @@ audio {
   background-color: rgb(40, 40, 40);
   
   text-overflow: ellipsis;
-  overflow: hidden;
-  
-  transition: max-height 5s ease-out;
-  
+  overflow: hidden;  
 }
 
 .trackLabel {

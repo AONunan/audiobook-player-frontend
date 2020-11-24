@@ -13,16 +13,16 @@
 
   <div id="header">
 
-    <h1>Audiobook player</h1>
-    <p>Welcome {{myname}}!</p>
+
+
+
   </div>
 
   <div id="library">
 
-    <h2>Library</h2>
 
     <!-- Audiobook list -->
-    <ul>
+    <ul class="authorList">
 
       <!-- Display all authors, books and tracks -->
       {% for author_key, author_value in library.items() %}
@@ -32,16 +32,17 @@
         <li id="{{author_key}}" class="authorLabel" onclick="showHideSection(this.id + '_list')">{{author_key}}
         </li>
 
-        <ul style="display:none;" id="{{author_key}}_list">
+        <ul class="bookList" style="display:none;" id="{{author_key}}_list">
 
           <!-- Display all books and tracks -->
           {% for book_key, book_value in author_value.items() %}
 
           <div class="bookSection">
 
-            <li id="{{author_key}}/{{book_key}}" class="bookLabel" onclick="showHideSection(this.id + '_list')">{{book_key}}</li>
+            <li id="{{author_key}}/{{book_key}}" class="bookLabel" onclick="showHideSection(this.id + '_list')">
+              {{book_key}}</li>
 
-            <ul style="display:none;" id="{{author_key}}/{{book_key}}_list">
+            <ul class="trackList" style="display:none;" id="{{author_key}}/{{book_key}}_list">
 
               <!-- Display all tracks as list items -->
               {% for track in book_value %}
@@ -67,7 +68,8 @@
 
   </div>
 
-  <div id="mediaPlayer">
+  <div id="footer">
+
 
     <audio controls id="player">
       <source
@@ -76,7 +78,7 @@
       Your browser does not support the audio element.
     </audio>
 
-    <br>
+
     <div id="mediaButtons">
 
       <button onclick="mediaControls('previousTrack')">⏮</button>
@@ -86,13 +88,16 @@
       <button onclick="mediaControls('nextTrack')">⏭</button>
     </div>
 
-    <table style="width: 100%; text-align: center;">
-      <tr>
-        <td id="currentlyPlayingAuthor">{{current_track["author"]}}</td>
-        <td id="currentlyPlayingBook">{{current_track["book"]}}</td>
-        <td id="currentlyPlayingTrack">{{current_track["track"]}}</td>
-      </tr>
-    </table>
+
+    <ul style="font-size: small; margin: 10px;">
+      <li id="currentlyPlayingAuthor">{{current_track["author"]}}</li>
+      <li id="currentlyPlayingBook">{{current_track["book"]}}</li>
+      <li id="currentlyPlayingTrack">{{current_track["track"]}}</li>
+    </ul>
+
+
+
+
   </div>
 
 </div>

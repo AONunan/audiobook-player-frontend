@@ -18,21 +18,6 @@ function setInitialValues(author, book, track, initialTimestamp) {
 }
 
 function playTrack(author, book, track, test) {
-  // POST to API to set current track
-  fetch("http://192.168.1.2:5200/set_current_track", {
-    mode: 'no-cors',
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      'author': author,
-      'book': book,
-      'track': track,
-      'timestamp': 0
-    }),
-  })
-
   // Revert all highlighting in library
 
   let i = 0;
@@ -45,7 +30,7 @@ function playTrack(author, book, track, test) {
   for (i = 0; i < labels.length; i++) { labels[i].style.color = "white"; }
 
   labels = document.getElementsByClassName("trackLabel");
-  for (i = 0; i < labels.length; i++) { labels[i].style.color = "white"; }
+  for (i = 0; i < labels.length; i++) { labels[i].style.color = "rgb(180, 180, 180)";; }
 
   // Highlight currently playing track in library
 
@@ -83,7 +68,7 @@ function mediaControls(action) {
 
   switch (action) {
     case "rewind":
-      mediaPlayer.currentTime -= 5;
+      mediaPlayer.currentTime -= 10;
       break;
 
     case "togglePlayPause":
@@ -111,7 +96,7 @@ function mediaControls(action) {
       break;
 
     case "fastForward":
-      mediaPlayer.currentTime += 5;
+      mediaPlayer.currentTime += 10;
       break;
 
     default:

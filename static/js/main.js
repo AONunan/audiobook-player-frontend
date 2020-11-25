@@ -14,7 +14,7 @@ function setInitialValues(author, book, track, initialTimestamp) {
   document.getElementById(author + "/" + book + "/" + track).style.color = "red";
 
   // Set timestamp in media player
-  document.getElementById("player").currentTime = initialTimestamp;
+  document.getElementById("player").currentTime = initialTimestamp - 10; // Rewind 10 seconds from saved time
 }
 
 function playTrack(author, book, track, test) {

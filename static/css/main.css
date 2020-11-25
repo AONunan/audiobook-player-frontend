@@ -6,7 +6,7 @@
 
 body {
   background-color: rgb(0, 0, 0);
-  color: rgb(255, 255, 255);
+  color: rgb(180, 180, 180);
   font-family: Arial, Helvetica, sans-serif;
 }
 
@@ -47,7 +47,6 @@ audio {
 
 .trackList {
   font-size: small;
-  color: rgb(180, 180, 180);
   background-color: rgb(40, 40, 40);
   
   text-overflow: ellipsis;
@@ -59,7 +58,7 @@ audio {
 }
 
 .authorLabel:hover, .bookLabel:hover, .trackLabel:hover {
-  background-color: black;
+  background-color: darkred;
   cursor: pointer;
 }
 

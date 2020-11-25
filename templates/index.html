@@ -62,9 +62,12 @@
                 this.id.split('/')[1], // Book
                 this.id.split('/')[2], // Track
                 this.id.split('/')[0]
-                )" style="display: flex;">
-                  <div style="flex-grow: 1;">{{track["track_shortname"]}}</div>
-                  <div style="padding-left: 5%; white-space: nowrap;">{{track["track_length"]}} ({{track["percentage_of_book_completed"]}}%)</div>
+                )">
+                <div style="display: flex;">
+                  <span style="flex-grow: 1;">{{track["track_shortname"]}}</span>
+                  <span>{{track["percentage_of_book_completed"]}}%</span>
+                  <span style="min-width: 75px; text-align: right;">{{track["track_length"]}}</span>
+                </div>
                 </li>
                 {% endfor %}
 

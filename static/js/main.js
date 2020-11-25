@@ -9,9 +9,9 @@ function setInitialValues(author, book, track, initialTimestamp) {
   document.getElementById(author + "/" + book + "_list").style.display = "block";
 
   // Highlight current track in library
-  document.getElementById(author).style.color = "red";
-  document.getElementById(author + "/" + book).style.color = "red";
-  document.getElementById(author + "/" + book + "/" + track).style.color = "red";
+  document.getElementById(author).style.color = "white";
+  document.getElementById(author + "/" + book).style.color = "white";
+  document.getElementById(author + "/" + book + "/" + track).style.color = "white";
 
   // Set timestamp in media player
   document.getElementById("player").currentTime = initialTimestamp - 10; // Rewind 10 seconds from saved time
@@ -24,19 +24,19 @@ function playTrack(author, book, track, test) {
   let labels = [];
 
   labels = document.getElementsByClassName("authorLabel");
-  for (i = 0; i < labels.length; i++) { labels[i].style.color = "white"; }
+  for (i = 0; i < labels.length; i++) { labels[i].style.color = "rgb(180, 180, 180)"; }
 
   labels = document.getElementsByClassName("bookLabel");
-  for (i = 0; i < labels.length; i++) { labels[i].style.color = "white"; }
+  for (i = 0; i < labels.length; i++) { labels[i].style.color = "rgb(180, 180, 180)"; }
 
   labels = document.getElementsByClassName("trackLabel");
-  for (i = 0; i < labels.length; i++) { labels[i].style.color = "rgb(180, 180, 180)";; }
+  for (i = 0; i < labels.length; i++) { labels[i].style.color = "rgb(180, 180, 180)"; }
 
   // Highlight currently playing track in library
 
-  document.getElementById(author).style.color = "red";
-  document.getElementById(author + "/" + book).style.color = "red";
-  document.getElementById(author + "/" + book + "/" + track).style.color = "red";
+  document.getElementById(author).style.color = "white";
+  document.getElementById(author + "/" + book).style.color = "white";
+  document.getElementById(author + "/" + book + "/" + track).style.color = "white";
 
   // Update current playing display
   document.getElementById("currentlyPlayingAuthor").innerText = author;

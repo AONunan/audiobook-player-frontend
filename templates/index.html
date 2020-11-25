@@ -9,100 +9,110 @@
 
 {% block body %}
 
-<div class="flexbox-container">
+<div>
 
-  <div id="header">
-    <a href="http://192.168.1.2:5200/trigger_library_scan"><button>Trigger library scan</button></a>
+  
+  <div id="mySidebar" class="sidebar">
+    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+    <a href="http://192.168.1.2:5200/trigger_library_scan" target="_blank">Scan library</a>
   </div>
+  
+  <div id="main">
+  
+    <div id="header">
+      <button class="openbtn" onclick="openNav()">&#9776;</button>
+    </div>
 
-  <div id="library">
+    <div id="library">
 
 
-    <!-- Audiobook list -->
-    <ul class="authorList">
+      <!-- Audiobook list -->
+      <ul class="authorList">
 
-      <!-- Display all authors, books and tracks -->
-      {% for author_key, author_value in library.items() %}
+        <!-- Display all authors, books and tracks -->
+        {% for author_key, author_value in library.items() %}
 
-      <div class="authorSection">
+        <div class="authorSection">
 
-        <li id="{{author_key}}" class="authorLabel" onclick="showHideSection(this.id + '_list')">{{author_key}}
-        </li>
+          <li id="{{author_key}}" class="authorLabel" onclick="showHideSection(this.id + '_list')">{{author_key}}
+          </li>
 
-        <ul class="bookList" style="display:none;" id="{{author_key}}_list">
+          <ul class="bookList" style="display:none;" id="{{author_key}}_list">
 
-          <!-- Display all books and tracks -->
-          {% for book_key, book_value in author_value.items() %}
+            <!-- Display all books and tracks -->
+            {% for book_key, book_value in author_value.items() %}
 
-          <div class="bookSection">
+            <div class="bookSection">
 
-            <li id="{{author_key}}/{{book_key}}" class="bookLabel" onclick="showHideSection(this.id + '_list')">
-              <div>{{book_value["book_title"]}}</div>
-              <div style="display: flex; font-size: small; padding-top: 1%;">
-                <div style="padding-right: 3%;">{{book_value["year"]}}</div>
-                <div style="flex-grow: 1;">{{book_value["narrator"]}}</div>
-                <div>{{book_value["book_length"]}}</div>
-              </div>
-            </li>
+              <li id="{{author_key}}/{{book_key}}" class="bookLabel" onclick="showHideSection(this.id + '_list')">
+                <div>{{book_value["book_title"]}}</div>
+                <div style="display: flex; font-size: small; padding-top: 1%;">
+                  <div style="padding-right: 3%;">{{book_value["year"]}}</div>
+                  <div style="flex-grow: 1;">{{book_value["narrator"]}}</div>
+                  <div>{{book_value["book_length"]}}</div>
+                </div>
+              </li>
 
-            <ul class="trackList" style="display:none;" id="{{author_key}}/{{book_key}}_list">
+              <ul class="trackList" style="display:none;" id="{{author_key}}/{{book_key}}_list">
 
-              <!-- Display all tracks as list items -->
-              {% for track in book_value["tracks"] %}
-              <li class="trackLabel" id="{{author_key}}/{{book_key}}/{{track["track_filename"]}}" onclick="playTrack(
+                <!-- Display all tracks as list items -->
+                {% for track in book_value["tracks"] %}
+                <li class="trackLabel" id="{{author_key}}/{{book_key}}/{{track["track_filename"]}}" onclick="playTrack(
                 this.id.split('/')[0], // Author
                 this.id.split('/')[1], // Book
                 this.id.split('/')[2], // Track
                 this.id.split('/')[0]
                 )" style="display: flex;">
-                <div style="flex-grow: 1;">{{track["track_filename"]}}</div>
-                <div style="padding-left: 5%; white-space: nowrap;">{{track["track_length"]}}</div>
-              </li>
-              {% endfor %}
+                  <div style="flex-grow: 1;">{{track["track_filename"]}}</div>
+                  <div style="padding-left: 5%; white-space: nowrap;">{{track["track_length"]}}</div>
+                </li>
+                {% endfor %}
 
-            </ul>
+              </ul>
 
-          </div>
+            </div>
 
-          {% endfor %}
-        </ul>
+            {% endfor %}
+          </ul>
 
-      </div>
+        </div>
 
-      {% endfor %}
-    </ul>
+        {% endfor %}
+      </ul>
 
-  </div>
-
-  <div id="footer">
-
-
-    <audio controls id="player">
-      <source
-        src='http://192.168.1.2/audiobooks/{{current_track["author"]}}/{{current_track["book"]}}/{{current_track["track"]}}'
-        type="audio/mpeg">
-      Your browser does not support the audio element.
-    </audio>
-
-
-    <div id="mediaButtons">
-
-      <!-- <button class="mediaButton" onclick="mediaControls('previousTrack')">⏮️</button> -->
-      <button class="mediaButton" onclick="mediaControls('rewind')">⏪</button>
-      <button class="mediaButton" id="playPauseButton" onclick="mediaControls('togglePlayPause')">▶️</button>
-      <button class="mediaButton" onclick="mediaControls('fastForward')">⏩︎</button>
-      <!-- <button class="mediaButton" onclick="mediaControls('nextTrack')">⏭️</button> -->
     </div>
 
-
-    <ul style="font-size: small; margin: 10px;">
-      <li id="currentlyPlayingAuthor">{{current_track["author"]}}</li>
-      <li id="currentlyPlayingBook">{{current_track["book"]}}</li>
-      <li id="currentlyPlayingTrack">{{current_track["track"]}}</li>
-    </ul>
+    <div id="footer">
 
 
+      <audio controls id="player">
+        <source
+          src='http://192.168.1.2/audiobooks/{{current_track["author"]}}/{{current_track["book"]}}/{{current_track["track"]}}'
+          type="audio/mpeg">
+        Your browser does not support the audio element.
+      </audio>
 
+
+      <div id="mediaButtons">
+
+        <!-- <button class="mediaButton" onclick="mediaControls('previousTrack')">⏮️</button> -->
+        <button class="mediaButton" onclick="mediaControls('rewind')">⏪</button>
+        <button class="mediaButton" id="playPauseButton" onclick="mediaControls('togglePlayPause')">▶️</button>
+        <button class="mediaButton" onclick="mediaControls('fastForward')">⏩︎</button>
+        <!-- <button class="mediaButton" onclick="mediaControls('nextTrack')">⏭️</button> -->
+      </div>
+
+
+      <ul style="font-size: small; margin: 10px;">
+        <li id="currentlyPlayingAuthor">{{current_track["author"]}}</li>
+        <li id="currentlyPlayingBook">{{current_track["book"]}}</li>
+        <li id="currentlyPlayingTrack">{{current_track["track"]}}</li>
+      </ul>
+
+
+
+
+    </div>
 
   </div>
 

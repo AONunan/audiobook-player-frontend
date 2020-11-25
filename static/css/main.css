@@ -41,7 +41,7 @@ audio {
   padding: 10px 20px;
 }
 
-.authorSection:hover, .bookSection:hover, button:hover {
+.authorSection:hover, .bookSection:hover, .mediaButton:hover {
   cursor: pointer;
 }
 
@@ -69,8 +69,6 @@ ul {
 
 #header {
   background-color: black;
-  position: fixed;
-  top: 0;
   width: 100%;
 }
 
@@ -98,14 +96,14 @@ ul {
   align-items: stretch;
 }
 
-button {
+.mediaButton {
   flex: 1;
   background-color: transparent;
   border: 0;
   font-size: xx-large;
 }
 
-button:hover {
+.mediaButton:hover {
   background-color: rgb(95, 0, 0);
 }
 

@@ -43,6 +43,9 @@ function playTrack(author, book, track, test) {
   document.getElementById("currentlyPlayingBook").innerText = book;
   document.getElementById("currentlyPlayingTrack").innerText = track;
 
+  // Update play pause button
+  document.getElementById("playPauseButton").innerHTML = "⏸️";
+
   // Update media player track
   let trackUri = "http://192.168.1.2/audiobooks/" + author + "/" + book + "/" + track
   let trackUriEncoded = encodeURI(trackUri);

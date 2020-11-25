@@ -12,10 +12,7 @@
 <div class="flexbox-container">
 
   <div id="header">
-
-
-
-
+    <a href="http://192.168.1.2:5200/trigger_library_scan"><button>Trigger library scan</button></a>
   </div>
 
   <div id="library">
@@ -40,18 +37,27 @@
           <div class="bookSection">
 
             <li id="{{author_key}}/{{book_key}}" class="bookLabel" onclick="showHideSection(this.id + '_list')">
-              {{book_key}}</li>
+              <div>{{book_value["book_title"]}}</div>
+              <div style="display: flex; font-size: small; padding-top: 1%;">
+                <div style="padding-right: 3%;">{{book_value["year"]}}</div>
+                <div style="flex-grow: 1;">{{book_value["narrator"]}}</div>
+                <div>{{book_value["book_length"]}}</div>
+              </div>
+            </li>
 
             <ul class="trackList" style="display:none;" id="{{author_key}}/{{book_key}}_list">
 
               <!-- Display all tracks as list items -->
-              {% for track in book_value %}
+              {% for track in book_value["tracks"] %}
               <li class="trackLabel" id="{{author_key}}/{{book_key}}/{{track["track_filename"]}}" onclick="playTrack(
                 this.id.split('/')[0], // Author
                 this.id.split('/')[1], // Book
                 this.id.split('/')[2], // Track
                 this.id.split('/')[0]
-                )">{{track["track_filename"]}} ({{track["track_length"]}})</span></li>
+                )" style="display: flex;">
+                <div style="flex-grow: 1;">{{track["track_filename"]}}</div>
+                <div style="padding-left: 5%; white-space: nowrap;">{{track["track_length"]}}</div>
+              </li>
               {% endfor %}
 
             </ul>
@@ -81,11 +87,11 @@
 
     <div id="mediaButtons">
 
-      <button onclick="mediaControls('previousTrack')">⏮</button>
-      <button onclick="mediaControls('rewind')">⏪</button>
-      <button id="playPauseButton" onclick="mediaControls('togglePlayPause')">▶️</button>
-      <button onclick="mediaControls('fastForward')">⏩︎</button>
-      <button onclick="mediaControls('nextTrack')">⏭</button>
+      <!-- <button class="mediaButton" onclick="mediaControls('previousTrack')">⏮️</button> -->
+      <button class="mediaButton" onclick="mediaControls('rewind')">⏪</button>
+      <button class="mediaButton" id="playPauseButton" onclick="mediaControls('togglePlayPause')">▶️</button>
+      <button class="mediaButton" onclick="mediaControls('fastForward')">⏩︎</button>
+      <!-- <button class="mediaButton" onclick="mediaControls('nextTrack')">⏭️</button> -->
     </div>
 
 

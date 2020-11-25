@@ -70,6 +70,10 @@ function mediaControls(action) {
   let mediaPlayer = document.getElementById("player");
 
   switch (action) {
+    case "rewind10Percent":
+      mediaPlayer.currentTime -= (mediaPlayer.duration / 10);
+      break;
+
     case "rewind":
       mediaPlayer.currentTime -= 10;
       break;
@@ -106,6 +110,10 @@ function mediaControls(action) {
 
     case "fastForward":
       mediaPlayer.currentTime += 10;
+      break;
+
+    case "fastForward10Percent":
+      mediaPlayer.currentTime += (mediaPlayer.duration / 10);
       break;
 
     default:

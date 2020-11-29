@@ -1,9 +1,15 @@
 let timestampSentToAPI = 0; // To be compared against the timestamp of the media player. If different, will be sent to the API
 let pauseTimestamp = 0; // The timestamp of when the media player was paused by the user
-
-
+let currentlyPlayingAuthor = "";
+let currentlyPlayingBook = "";
+let currentlyPlayingTrack = "";
 
 function setInitialValues(author, book, track, initialTimestamp) {
+  // Set global values
+  currentlyPlayingAuthor = author;
+  currentlyPlayingBook = book;
+  currentlyPlayingTrack = track;
+
   // Expand library sections
   document.getElementById(author + "_list").style.display = "block";
   document.getElementById(author + "/" + book + "_list").style.display = "block";
@@ -17,7 +23,7 @@ function setInitialValues(author, book, track, initialTimestamp) {
   document.getElementById("player").currentTime = initialTimestamp; // Rewind 10 seconds from saved time
 }
 
-function playTrack(author, book, track, test) {
+function playTrack(author, book, track) {
   // Revert all highlighting in library
 
   let i = 0;
@@ -43,6 +49,11 @@ function playTrack(author, book, track, test) {
   document.getElementById("currentlyPlayingBook").innerText = book;
   document.getElementById("currentlyPlayingTrack").innerText = track;
 
+  // Update global values
+  currentlyPlayingAuthor = author;
+  currentlyPlayingBook = book;
+  currentlyPlayingTrack = track;
+
   // Update play pause button
   document.getElementById("playPauseButton").innerHTML = "⏸️";
 
@@ -66,17 +77,11 @@ function showHideSection(id) {
 }
 
 
-function mediaControls(action) {
+function mediaControls(action, library) {
   let mediaPlayer = document.getElementById("player");
+  let currentTrackNumber = -1;
 
   switch (action) {
-    case "rewind10Percent":
-      mediaPlayer.currentTime -= (mediaPlayer.duration / 10);
-      break;
-
-    case "rewind":
-      mediaPlayer.currentTime -= 10;
-      break;
 
     case "togglePlayPause":
 
@@ -106,12 +111,54 @@ function mediaControls(action) {
 
       break;
 
+    case "stop":
+      break;
+
+
+    case "rewind":
+      mediaPlayer.currentTime -= 10; // Skip back 10 seconds
+      break;
+
     case "fastForward":
-      mediaPlayer.currentTime += 10;
+      mediaPlayer.currentTime += 10; // Skip forward 10 seconds
+      break;
+
+
+    case "rewind10Percent":
+      mediaPlayer.currentTime -= (mediaPlayer.duration / 10);
       break;
 
     case "fastForward10Percent":
       mediaPlayer.currentTime += (mediaPlayer.duration / 10);
+      break;
+
+
+    case "previousTrack":
+      if (mediaPlayer.currentTime < 10) { // If under 10 seconds into track, switch to previous track
+        currentTrackNumber = getCurrentTrackNumber(library);
+
+        if (currentTrackNumber > 0) { // Check if we're already on the first track
+          let previousTrack = library[currentlyPlayingAuthor][currentlyPlayingBook]['tracks'][currentTrackNumber - 1]['track_filename'];
+          playTrack(currentlyPlayingAuthor, currentlyPlayingBook, previousTrack);
+        } else {
+          console.log('Already on first track. Not changing.');
+        }
+      } else { // If 10 seconds or more into track, reset time to 0 but stay on same track
+        mediaPlayer.currentTime = 0;
+      }
+
+      break;
+
+    case "nextTrack":
+      currentTrackNumber = getCurrentTrackNumber(library);
+
+      if (currentTrackNumber != library[currentlyPlayingAuthor][currentlyPlayingBook]['tracks'].length - 1) { // Check if we're already on the last track
+        let nextTrack = library[currentlyPlayingAuthor][currentlyPlayingBook]['tracks'][currentTrackNumber + 1]['track_filename'];
+        playTrack(currentlyPlayingAuthor, currentlyPlayingBook, nextTrack);
+      } else {
+        console.log('Already on last track. Not changing.');
+      }
+
       break;
 
     default:
@@ -119,6 +166,22 @@ function mediaControls(action) {
   }
 }
 
+function getCurrentTrackNumber(library) {
+  let currentTrackNumber = -1; // Currently unknown
+
+  let i = 0;
+  let tracks = library[currentlyPlayingAuthor][currentlyPlayingBook]['tracks'];
+
+  for (i = 0; i < tracks.length; i++) {
+    if (tracks[i]['track_filename'] === currentlyPlayingTrack) {
+      currentTrackNumber = tracks[i]['track_number'];
+      break;
+    }
+  }
+
+  return currentTrackNumber;
+
+}
 
 window.setInterval(function () {
 

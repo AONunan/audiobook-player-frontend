@@ -64,7 +64,7 @@
                 this.id.split('/')[0]
                 )">
                 <div style="display: flex;">
-                  <span style="flex-grow: 1;">{{track["track_shortname"]}}</span>
+                  <span style="flex-grow: 1;">track {{track["track_number"] + 1}}</span>
                   <span>{{track["percentage_of_book_completed"]}}%</span>
                   <span style="min-width: 75px; text-align: right;">{{track["track_length"]}}</span>
                 </div>
@@ -99,10 +99,10 @@
       <div id="mediaButtons">
 
         <div class="mediaButtonRow">
-          <button class="mediaButton" title="Previous track" onclick="mediaControls('previousTrack')">⏮️</button>
+          <button class="mediaButton" title="Previous track" onclick="mediaControls('previousTrack', {{library}})">⏮️</button>
           <button class="mediaButton" title="Stop" onclick="mediaControls('stop')">⏹️</button>
           <button class="mediaButton" title="Play/Pause" onclick="mediaControls('togglePlayPause')" id="playPauseButton">▶️</button>
-          <button class="mediaButton" title="Next track" onclick="mediaControls('nextTrack')">⏭️</button>
+          <button class="mediaButton" title="Next track" onclick="mediaControls('nextTrack', {{library}})">⏭️</button>
           
         </div>
         

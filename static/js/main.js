@@ -45,6 +45,7 @@ function playTrack(author, book, track) {
   document.getElementById(author + "/" + book + "/" + track).style.color = "white";
 
   // Update current playing display
+  document.getElementById("footer").style.display = "block";
   document.getElementById("currentlyPlayingAuthor").innerText = author;
   document.getElementById("currentlyPlayingBook").innerText = book;
   document.getElementById("currentlyPlayingTrack").innerText = track;
@@ -112,6 +113,10 @@ function mediaControls(action, library) {
       break;
 
     case "stop":
+      mediaPlayer.pause();
+      document.getElementById("playPauseButton").innerHTML = "▶️";
+
+      document.getElementById("footer").style.display = "none";
       break;
 
 

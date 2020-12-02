@@ -95,9 +95,9 @@ function mediaControls(action, library) {
         let rewindAmount = 0;
 
         if (timeSinceLastPause > 20) {
-          rewindAmount = 10; // Rewind by a maximum of 10 seconds
+          rewindAmount = 20; // Rewind by a maximum of 20 seconds
         } else {
-          rewindAmount = timeSinceLastPause / 2;
+          rewindAmount = timeSinceLastPause;
         }
 
         console.log("Rewinding media player by:", rewindAmount, "seconds");
@@ -121,11 +121,11 @@ function mediaControls(action, library) {
 
 
     case "rewind":
-      mediaPlayer.currentTime -= 10; // Skip back 10 seconds
+      mediaPlayer.currentTime -= 15; // Skip back 15 seconds
       break;
 
     case "fastForward":
-      mediaPlayer.currentTime += 10; // Skip forward 10 seconds
+      mediaPlayer.currentTime += 15; // Skip forward 15 seconds
       break;
 
 

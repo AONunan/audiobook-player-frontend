@@ -33,6 +33,11 @@ window.setInterval(function () {
 }, 10000); // Loop every 10 seconds
 
 function playTrack(author, book, track) {
+  // Update global values
+  currentlyPlaying["author"] = author;
+  currentlyPlaying["book"] = book;
+  currentlyPlaying["track"] = track;
+
   // Revert all highlighting in library
 
   let i = 0;
@@ -57,11 +62,6 @@ function playTrack(author, book, track) {
   document.getElementById("footer").style.display = "block";
   displayCurrentPlayingInfo();
   displayPercentage();
-
-  // Update global values
-  currentlyPlaying["author"] = author;
-  currentlyPlaying["book"] = book;
-  currentlyPlaying["track"] = track;
 
   // Update play pause button
   document.getElementById("playPauseButton").innerHTML = "⏸️";

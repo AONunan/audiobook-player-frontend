@@ -1,13 +1,13 @@
 let pauseTimestamp = 0; // The timestamp of when the media player was paused by the user
 let currentlyPlaying = {};
-let libraryTest = {};
+let library = {};
 
-function setInitialValues(author, book, track, initialTimestamp, library) {
+function setInitialValues(author, book, track, initialTimestamp, myLibrary) {
   // Set global values
   currentlyPlaying["author"] = author;
   currentlyPlaying["book"] = book;
   currentlyPlaying["track"] = track;
-  libraryTest = library;
+  library = myLibrary;
 
   // Expand library sections
   document.getElementById(`${author}_list`).style.display = "block";
@@ -56,6 +56,7 @@ function playTrack(author, book, track) {
   // Update current playing display
   document.getElementById("footer").style.display = "block";
   displayCurrentPlayingInfo();
+  displayPercentage();
 
   // Update global values
   currentlyPlaying["author"] = author;
@@ -72,11 +73,12 @@ function playTrack(author, book, track) {
   let player = document.getElementById("player");
   player.src = trackUriEncoded;
   player.play();
+
 }
 
 
 
-function getCurrentTrackNumber(library) {
+function getCurrentTrackNumber() {
   let currentTrackNumber = -1; // Currently unknown
 
   let i = 0;
@@ -128,14 +130,39 @@ function showHideSection(id) {
 }
 
 function displayPercentage() {
-  console.log("Finding percentage");
-
   let mediaPlayer = document.getElementById("player")
   let currentTime = mediaPlayer.currentTime;
+
+  // Get percent complete of current track
+
   let currentTrackLength = mediaPlayer.duration;
   let trackPercentComplete = Math.round(currentTime / currentTrackLength * 100);
 
-  document.getElementById("trackPercentComplete").innerHTML = `Track progress: ${trackPercentComplete}%`;
+  if (Number.isNaN(trackPercentComplete)) {
+    trackPercentComplete = 0;
+  }
+
+  // Get total percentage complete of book
+
+  let totalSecondsComplete = 0;
+  let bookLengthSeconds = library[currentlyPlaying["author"]][currentlyPlaying["book"]]["book_length_seconds"];
+  let i = 0;
+  let tracks = library[currentlyPlaying["author"]][currentlyPlaying["book"]]['tracks'];
+  
+  for (i = 0; i < tracks.length; i++) {
+    // Sum up all track lengths until we get to current track
+    if (tracks[i]['track_filename'] === currentlyPlaying["track"]) {
+      // Add the current track progress and break out of loop
+      totalSecondsComplete += currentTime;
+      break;
+    } else {
+      totalSecondsComplete += tracks[i]['track_length_seconds'];
+    }
+  }
+
+  let bookPercentComplete = Math.round(totalSecondsComplete / bookLengthSeconds * 100);
+  
+  document.getElementById("trackPercentComplete").innerHTML = `Track progress: ${trackPercentComplete}%. Book progress: ${bookPercentComplete}%.`;
 }
 
 function openSidebar() {
@@ -157,7 +184,7 @@ function displayCurrentPlayingInfo() {
 
 // Media control functions
 
-function mediaControls(action, library) {
+function mediaControls(action) {
   let mediaPlayer = document.getElementById("player");
 
   switch (action) {
@@ -192,11 +219,11 @@ function mediaControls(action, library) {
 
 
     case "previousTrack":
-      playPreviousTrack(library);
+      playPreviousTrack();
       break;
 
     case "nextTrack":
-      playNextTrack(library);
+      playNextTrack();
       break;
 
 
@@ -207,11 +234,11 @@ function mediaControls(action, library) {
   displayPercentage();
 }
 
-function playPreviousTrack(library) {
+function playPreviousTrack() {
   let mediaPlayer = document.getElementById("player");
-  
+
   if (mediaPlayer.currentTime < 10) { // If under 10 seconds into track, switch to previous track
-    let currentTrackNumber = getCurrentTrackNumber(library);
+    let currentTrackNumber = getCurrentTrackNumber();
 
     if (currentTrackNumber > 0) { // Check if we're already on the first track
       let previousTrack = library[currentlyPlaying["author"]][currentlyPlaying["book"]]['tracks'][currentTrackNumber - 1]['track_filename'];
@@ -225,8 +252,8 @@ function playPreviousTrack(library) {
 
 }
 
-function playNextTrack(library) {
-  let currentTrackNumber = getCurrentTrackNumber(library);
+function playNextTrack() {
+  let currentTrackNumber = getCurrentTrackNumber();
 
   if (currentTrackNumber != library[currentlyPlaying["author"]][currentlyPlaying["book"]]['tracks'].length - 1) { // Check if we're already on the last track
     let nextTrack = library[currentlyPlaying["author"]][currentlyPlaying["book"]]['tracks'][currentTrackNumber + 1]['track_filename'];

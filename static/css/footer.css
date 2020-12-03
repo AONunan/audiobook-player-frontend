@@ -1,0 +1,40 @@
+audio {
+  width: 100%;
+}
+
+#footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  
+  /* background: linear-gradient(to top, rgb(117, 0, 0), transparent 100%); */
+  background-color: rgb(36, 36, 36);
+}
+
+#player {
+  pointer-events: none;
+}
+
+/* audio::-webkit-media-controls-panel {
+} */
+
+.mediaButtonRow {
+  display: flex;
+}
+
+#mediaButtons {
+  width: 100%;
+  align-items: stretch;
+}
+
+.mediaButton {
+  flex: 1;
+  background-color: transparent;
+  border: 0;
+  font-size: xx-large;
+}
+
+.mediaButton:hover {
+  background-color: rgb(95, 0, 0);
+}
+

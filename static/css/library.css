@@ -1,0 +1,54 @@
+#library {
+  margin: auto;
+  max-width: 1000px;
+  padding-bottom: 25vh;
+}
+
+.authorList {
+  margin: 10px;
+}
+
+.authorSection {
+  background-color: rgb(20, 20, 20);
+  
+  font-size: large;
+}
+
+.authorLabel {
+  padding: 10px;
+}
+
+.bookList {
+  font-size: medium;
+  
+}
+
+.bookSection {
+  background-color: rgb(30, 30, 30);
+}
+
+.bookLabel {
+  padding: 10px 20px;
+}
+
+.authorSection:hover, .bookSection:hover, .mediaButton:hover {
+  cursor: pointer;
+}
+
+.trackList {
+  font-size: small;
+  background-color: rgb(40, 40, 40);
+  
+  text-overflow: ellipsis;
+  overflow: hidden;  
+}
+
+.trackLabel {
+  padding: 5px 30px;
+}
+
+.authorLabel:hover, .bookLabel:hover, .trackLabel:hover {
+  background-color: darkred;
+  cursor: pointer;
+}
+

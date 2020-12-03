@@ -13,14 +13,14 @@
 
   
   <div id="mySidebar" class="sidebar">
-    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+    <a href="javascript:void(0)" class="closebtn" onclick="closeSidebar()">&times;</a>
     <a href="http://192.168.1.2:5200/trigger_library_scan" target="_blank">Scan library</a>
   </div>
   
   <div id="main">
   
     <div id="header">
-      <button class="openbtn" onclick="openNav()">&#9776;</button>
+      <button class="openSidebarButton" onclick="openSidebar()">&#9776;</button>
     </div>
 
     <div id="library">
@@ -118,9 +118,10 @@
 
 
       <ul style="font-size: small; margin: 10px;">
-        <li id="currentlyPlayingAuthor">{{current_track["author"]}}</li>
-        <li id="currentlyPlayingBook">{{current_track["book"]}}</li>
-        <li id="currentlyPlayingTrack">{{current_track["track"]}}</li>
+        <li id="currentlyPlayingAuthor"></li>
+        <li id="currentlyPlayingBook"></li>
+        <li id="currentlyPlayingTrack"></li>
+        <li id="trackPercentComplete"></li>
       </ul>
 
 

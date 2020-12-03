@@ -1,27 +1,36 @@
-let timestampSentToAPI = 0; // To be compared against the timestamp of the media player. If different, will be sent to the API
 let pauseTimestamp = 0; // The timestamp of when the media player was paused by the user
-let currentlyPlayingAuthor = "";
-let currentlyPlayingBook = "";
-let currentlyPlayingTrack = "";
+let currentlyPlaying = {};
+let libraryTest = {};
 
-function setInitialValues(author, book, track, initialTimestamp) {
+function setInitialValues(author, book, track, initialTimestamp, library) {
   // Set global values
-  currentlyPlayingAuthor = author;
-  currentlyPlayingBook = book;
-  currentlyPlayingTrack = track;
+  currentlyPlaying["author"] = author;
+  currentlyPlaying["book"] = book;
+  currentlyPlaying["track"] = track;
+  libraryTest = library;
 
   // Expand library sections
-  document.getElementById(author + "_list").style.display = "block";
-  document.getElementById(author + "/" + book + "_list").style.display = "block";
+  document.getElementById(`${author}_list`).style.display = "block";
+  document.getElementById(`${author}/${book}_list`).style.display = "block";
 
   // Highlight current track in library
   document.getElementById(author).style.color = "white";
-  document.getElementById(author + "/" + book).style.color = "white";
-  document.getElementById(author + "/" + book + "/" + track).style.color = "white";
+  document.getElementById(`${author}/${book}`).style.color = "white";
+  document.getElementById(`${author}/${book}/${track}`).style.color = "white";
 
   // Set timestamp in media player
   document.getElementById("player").currentTime = initialTimestamp; // Rewind 10 seconds from saved time
+  displayCurrentPlayingInfo();
+
+  // Display percent played so far
+  displayPercentage();
 }
+
+window.setInterval(function () {
+  postCurrentTrackInfo();
+  displayPercentage();
+
+}, 10000); // Loop every 10 seconds
 
 function playTrack(author, book, track) {
   // Revert all highlighting in library
@@ -41,31 +50,72 @@ function playTrack(author, book, track) {
   // Highlight currently playing track in library
 
   document.getElementById(author).style.color = "white";
-  document.getElementById(author + "/" + book).style.color = "white";
-  document.getElementById(author + "/" + book + "/" + track).style.color = "white";
+  document.getElementById(`${author}/${book}`).style.color = "white";
+  document.getElementById(`${author}/${book}/${track}`).style.color = "white";
 
   // Update current playing display
   document.getElementById("footer").style.display = "block";
-  document.getElementById("currentlyPlayingAuthor").innerText = author;
-  document.getElementById("currentlyPlayingBook").innerText = book;
-  document.getElementById("currentlyPlayingTrack").innerText = track;
+  displayCurrentPlayingInfo();
 
   // Update global values
-  currentlyPlayingAuthor = author;
-  currentlyPlayingBook = book;
-  currentlyPlayingTrack = track;
+  currentlyPlaying["author"] = author;
+  currentlyPlaying["book"] = book;
+  currentlyPlaying["track"] = track;
 
   // Update play pause button
   document.getElementById("playPauseButton").innerHTML = "⏸️";
 
   // Update media player track
-  let trackUri = "http://192.168.1.2/audiobooks/" + author + "/" + book + "/" + track
+  let trackUri = `http://192.168.1.2/audiobooks/${author}/${book}/${track}`
   let trackUriEncoded = encodeURI(trackUri);
 
   let player = document.getElementById("player");
   player.src = trackUriEncoded;
   player.play();
 }
+
+
+
+function getCurrentTrackNumber(library) {
+  let currentTrackNumber = -1; // Currently unknown
+
+  let i = 0;
+  let tracks = library[currentlyPlaying["author"]][currentlyPlaying["book"]]['tracks'];
+
+  for (i = 0; i < tracks.length; i++) {
+    if (tracks[i]['track_filename'] === currentlyPlaying["track"]) {
+      currentTrackNumber = tracks[i]['track_number'];
+      break;
+    }
+  }
+
+  return currentTrackNumber;
+}
+
+// API functions
+
+function postCurrentTrackInfo() {
+  let mediaPlayer = document.getElementById("player");
+  let mediaPlayerTimestamp = Math.floor(mediaPlayer.currentTime);
+
+  if (currentlyPlaying["timestamp"] === mediaPlayerTimestamp) {
+    console.log("Timestamps the same, skipping");
+  } else {
+
+    currentlyPlaying["timestamp"] = Math.floor(mediaPlayer.currentTime);
+
+    fetch("http://192.168.1.2:5200/set_current_track", {
+      mode: 'no-cors',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(currentlyPlaying),
+    })
+  }
+}
+
+// UI functions
 
 function showHideSection(id) {
   let section = document.getElementById(id);
@@ -77,45 +127,48 @@ function showHideSection(id) {
   }
 }
 
+function displayPercentage() {
+  console.log("Finding percentage");
+
+  let mediaPlayer = document.getElementById("player")
+  let currentTime = mediaPlayer.currentTime;
+  let currentTrackLength = mediaPlayer.duration;
+  let trackPercentComplete = Math.round(currentTime / currentTrackLength * 100);
+
+  document.getElementById("trackPercentComplete").innerHTML = `Track progress: ${trackPercentComplete}%`;
+}
+
+function openSidebar() {
+  document.getElementById("mySidebar").style.width = "250px";
+  document.getElementById("main").style.pointerEvents = "none";
+}
+
+/* Set the width of the sidebar to 0 and the left margin of the page content to 0 */
+function closeSidebar() {
+  document.getElementById("mySidebar").style.width = "0";
+  document.getElementById("main").style.pointerEvents = "all";
+}
+
+function displayCurrentPlayingInfo() {
+  document.getElementById("currentlyPlayingAuthor").innerText = currentlyPlaying["author"];
+  document.getElementById("currentlyPlayingBook").innerText = currentlyPlaying["book"];
+  document.getElementById("currentlyPlayingTrack").innerText = currentlyPlaying["track"];
+}
+
+// Media control functions
 
 function mediaControls(action, library) {
   let mediaPlayer = document.getElementById("player");
-  let currentTrackNumber = -1;
 
   switch (action) {
 
     case "togglePlayPause":
-
-      let playPauseButton = document.getElementById("playPauseButton");
-
-      if (mediaPlayer.paused) {
-        mediaPlayer.play();
-
-        let timeSinceLastPause = Date.now() / 1000 - pauseTimestamp; // Check how long it's been since the media player was paused
-        let rewindAmount = 0;
-
-        if (timeSinceLastPause > 20) {
-          rewindAmount = 20; // Rewind by a maximum of 20 seconds
-        } else {
-          rewindAmount = timeSinceLastPause;
-        }
-
-        console.log("Rewinding media player by:", rewindAmount, "seconds");
-        mediaPlayer.currentTime -= rewindAmount;
-        playPauseButton.innerHTML = "⏸️";
-
-      } else {
-        mediaPlayer.pause();
-        pauseTimestamp = Date.now() / 1000; // Log the time the media player was paused
-        playPauseButton.innerHTML = "▶️";
-      }
-
+      togglePlayPause();
       break;
 
     case "stop":
       mediaPlayer.pause();
       document.getElementById("playPauseButton").innerHTML = "▶️";
-
       document.getElementById("footer").style.display = "none";
       break;
 
@@ -139,95 +192,76 @@ function mediaControls(action, library) {
 
 
     case "previousTrack":
-      if (mediaPlayer.currentTime < 10) { // If under 10 seconds into track, switch to previous track
-        currentTrackNumber = getCurrentTrackNumber(library);
-
-        if (currentTrackNumber > 0) { // Check if we're already on the first track
-          let previousTrack = library[currentlyPlayingAuthor][currentlyPlayingBook]['tracks'][currentTrackNumber - 1]['track_filename'];
-          playTrack(currentlyPlayingAuthor, currentlyPlayingBook, previousTrack);
-        } else {
-          console.log('Already on first track. Not changing.');
-        }
-      } else { // If 10 seconds or more into track, reset time to 0 but stay on same track
-        mediaPlayer.currentTime = 0;
-      }
-
+      playPreviousTrack(library);
       break;
 
     case "nextTrack":
-      currentTrackNumber = getCurrentTrackNumber(library);
-
-      if (currentTrackNumber != library[currentlyPlayingAuthor][currentlyPlayingBook]['tracks'].length - 1) { // Check if we're already on the last track
-        let nextTrack = library[currentlyPlayingAuthor][currentlyPlayingBook]['tracks'][currentTrackNumber + 1]['track_filename'];
-        playTrack(currentlyPlayingAuthor, currentlyPlayingBook, nextTrack);
-      } else {
-        console.log('Already on last track. Not changing.');
-      }
-
+      playNextTrack(library);
       break;
+
 
     default:
       console.log("No matching actions found.");
   }
+
+  displayPercentage();
 }
 
-function getCurrentTrackNumber(library) {
-  let currentTrackNumber = -1; // Currently unknown
-
-  let i = 0;
-  let tracks = library[currentlyPlayingAuthor][currentlyPlayingBook]['tracks'];
-
-  for (i = 0; i < tracks.length; i++) {
-    if (tracks[i]['track_filename'] === currentlyPlayingTrack) {
-      currentTrackNumber = tracks[i]['track_number'];
-      break;
-    }
-  }
-
-  return currentTrackNumber;
-
-}
-
-window.setInterval(function () {
-
+function playPreviousTrack(library) {
   let mediaPlayer = document.getElementById("player");
-  let mediaPlayerTimestamp = Math.floor(mediaPlayer.currentTime);
+  
+  if (mediaPlayer.currentTime < 10) { // If under 10 seconds into track, switch to previous track
+    let currentTrackNumber = getCurrentTrackNumber(library);
 
-  if (timestampSentToAPI === mediaPlayerTimestamp) {
-    console.log("Timestamps the same, skipping");
-  } else {
-
-    timestampSentToAPI = Math.floor(mediaPlayer.currentTime);
-
-    let author = document.getElementById("currentlyPlayingAuthor").innerHTML;
-    let book = document.getElementById("currentlyPlayingBook").innerHTML;
-    let track = document.getElementById("currentlyPlayingTrack").innerHTML;
-
-    fetch("http://192.168.1.2:5200/set_current_track", {
-      mode: 'no-cors',
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        'author': author,
-        'book': book,
-        'track': track,
-        'timestamp': timestampSentToAPI
-      }),
-    })
+    if (currentTrackNumber > 0) { // Check if we're already on the first track
+      let previousTrack = library[currentlyPlaying["author"]][currentlyPlaying["book"]]['tracks'][currentTrackNumber - 1]['track_filename'];
+      playTrack(currentlyPlaying["author"], currentlyPlaying["book"], previousTrack);
+    } else {
+      console.log('Already on first track. Not changing.');
+    }
+  } else { // If 10 seconds or more into track, reset time to 0 but stay on same track
+    mediaPlayer.currentTime = 0;
   }
 
-}, 10000); // Loop every 10 seconds
-
-
-function openNav() {
-  document.getElementById("mySidebar").style.width = "250px";
-  document.getElementById("main").style.pointerEvents = "none";
 }
 
-/* Set the width of the sidebar to 0 and the left margin of the page content to 0 */
-function closeNav() {
-  document.getElementById("mySidebar").style.width = "0";
-  document.getElementById("main").style.pointerEvents = "all";
+function playNextTrack(library) {
+  let currentTrackNumber = getCurrentTrackNumber(library);
+
+  if (currentTrackNumber != library[currentlyPlaying["author"]][currentlyPlaying["book"]]['tracks'].length - 1) { // Check if we're already on the last track
+    let nextTrack = library[currentlyPlaying["author"]][currentlyPlaying["book"]]['tracks'][currentTrackNumber + 1]['track_filename'];
+    playTrack(currentlyPlaying["author"], currentlyPlaying["book"], nextTrack);
+  } else {
+    console.log('Already on last track. Not changing.');
+  }
+
+
+}
+
+function togglePlayPause() {
+  let mediaPlayer = document.getElementById("player");
+  let playPauseButton = document.getElementById("playPauseButton");
+
+  if (mediaPlayer.paused) {
+    mediaPlayer.play();
+
+    let timeSinceLastPause = Date.now() / 1000 - pauseTimestamp; // Check how long it's been since the media player was paused
+    let rewindAmount = 0;
+
+    if (timeSinceLastPause > 20) {
+      rewindAmount = 20; // Rewind by a maximum of 20 seconds
+    } else {
+      rewindAmount = timeSinceLastPause;
+    }
+
+    console.log("Rewinding media player by:", rewindAmount, "seconds");
+    mediaPlayer.currentTime -= rewindAmount;
+    playPauseButton.innerHTML = "⏸️";
+
+  } else {
+    mediaPlayer.pause();
+    pauseTimestamp = Date.now() / 1000; // Log the time the media player was paused
+    playPauseButton.innerHTML = "▶️";
+  }
+
 }

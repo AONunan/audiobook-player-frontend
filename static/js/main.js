@@ -129,21 +129,37 @@ function showHideSection(id) {
   }
 }
 
+function secondsToHms(d) {
+  d = Number(d);
+  var h = Math.floor(d / 3600);
+  var m = Math.floor(d % 3600 / 60);
+  var s = Math.floor(d % 3600 % 60);
+
+  var hDisplay = h > 0 ? h + " hr " : "";
+  var mDisplay = m + " min";
+  return hDisplay + mDisplay; 
+}
+
+
 function displayPercentage() {
-  let mediaPlayer = document.getElementById("player")
+  let mediaPlayer = document.getElementById("player");
   let currentTime = mediaPlayer.currentTime;
 
   // Get percent complete of current track
 
   let currentTrackLength = mediaPlayer.duration;
-  let trackPercentComplete = Math.round(currentTime / currentTrackLength * 100);
+  let trackPercentCompleteUnrounded = currentTime / currentTrackLength * 100;
+  let trackPercentComplete = Math.round(trackPercentCompleteUnrounded);
 
   if (Number.isNaN(trackPercentComplete)) {
     trackPercentComplete = 0;
   }
 
+  document.getElementById("progressBarPercent").style.width = `${trackPercentCompleteUnrounded}%`;
+  document.getElementById("trackPercentComplete").innerHTML = `${secondsToHms(currentTime)} / ${secondsToHms(currentTrackLength)} (${trackPercentComplete}%), ${secondsToHms(currentTrackLength - currentTime)} remaining`;
+  
   // Get total percentage complete of book
-
+  
   let totalSecondsComplete = 0;
   let bookLengthSeconds = library[currentlyPlaying["author"]][currentlyPlaying["book"]]["book_length_seconds"];
   let i = 0;
@@ -159,10 +175,10 @@ function displayPercentage() {
       totalSecondsComplete += tracks[i]['track_length_seconds'];
     }
   }
-
+  
   let bookPercentComplete = Math.round(totalSecondsComplete / bookLengthSeconds * 100);
   
-  document.getElementById("trackPercentComplete").innerHTML = `Track progress: ${trackPercentComplete}%. Book progress: ${bookPercentComplete}%.`;
+  document.getElementById("bookPercentComplete").innerHTML = `${secondsToHms(totalSecondsComplete)} / ${secondsToHms(bookLengthSeconds)} (${bookPercentComplete}%), ${secondsToHms(bookLengthSeconds - totalSecondsComplete)} remaining`;
 }
 
 function openSidebar() {
@@ -178,7 +194,7 @@ function closeSidebar() {
 
 function displayCurrentPlayingInfo() {
   document.getElementById("currentlyPlayingAuthor").innerText = currentlyPlaying["author"];
-  document.getElementById("currentlyPlayingBook").innerText = currentlyPlaying["book"];
+  document.getElementById("currentlyPlayingBook").innerText = library[currentlyPlaying["author"]][currentlyPlaying["book"]]['book_title'];
   document.getElementById("currentlyPlayingTrack").innerText = currentlyPlaying["track"];
 }
 

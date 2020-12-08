@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block head %}
-<title>{{myname}}'s Flask app</title>
+<title>{{myname}}'s Audiobooks</title>
 {% endblock %}
 
 
@@ -64,7 +64,7 @@
                 this.id.split('/')[0]
                 )">
                 <div style="display: flex;">
-                  <span style="flex-grow: 1;">track {{track["track_number"] + 1}}</span>
+                  <span style="flex-grow: 1;">Track {{track["track_number"] + 1}}</span>
                   <span style="min-width: 75px; text-align: right;">{{track["track_length"]}}</span>
                 </div>
                 </li>
@@ -87,22 +87,41 @@
     <div id="footer">
 
 
-      <audio controls id="player">
+      <audio id="player">
         <source
           src='http://192.168.1.2/audiobooks/{{current_track["author"]}}/{{current_track["book"]}}/{{current_track["track"]}}'
           type="audio/mpeg">
         Your browser does not support the audio element.
       </audio>
 
+      <div style="background-color: darkslategrey; height: 5px;">
+        <div id="progressBarPercent" style="background-color: rgb(0, 120, 215); height: 100%; width: 0%;"></div>
+      </div>
 
-      <div id="mediaButtons">
+
+
+      <div style="font-size: small; margin: 10px; text-align: center;">
+        <div>
+          <p id="currentlyPlayingAuthor"></p>
+        </div>
+        <div style="margin: 10px;">
+          <p id="currentlyPlayingBook"></p>
+          <p id="bookPercentComplete"></p>
+        </div>
+        <div>
+          <p id="currentlyPlayingTrack"></p>
+          <p id="trackPercentComplete"></p>
+        </div>
+      </div>
+
+
+      <div id="mediaButtons" style="padding-bottom: 10px;">
 
         <div class="mediaButtonRow">
           <button class="mediaButton" title="Previous track" onclick="mediaControls('previousTrack')">⏮️</button>
           <button class="mediaButton" title="Stop" onclick="mediaControls('stop')">⏹️</button>
           <button class="mediaButton" title="Play/Pause" onclick="mediaControls('togglePlayPause')" id="playPauseButton">▶️</button>
           <button class="mediaButton" title="Next track" onclick="mediaControls('nextTrack')">⏭️</button>
-          
         </div>
         
         <div class="mediaButtonRow">
@@ -110,19 +129,8 @@
           <button class="mediaButton" title="Rewind 15 seconds" onclick="mediaControls('rewind')">⏪</button>
           <button class="mediaButton" title="Fast forward 15 seconds" onclick="mediaControls('fastForward')">⏩︎</button>
           <button class="mediaButton" title="Fast forward 10%" onclick="mediaControls('fastForward10Percent')">⏩︎</button>
-
         </div>
 
-      </div>
-
-
-      <div style="font-size: small; margin: 10px;">
-        <div style="display: flex;">
-          <p style="flex: 1;" id="currentlyPlayingAuthor"></p>
-          <p style="flex: 1; text-align: center;" id="currentlyPlayingBook"></p>
-          <p style="flex: 1; text-align:right" id="currentlyPlayingTrack"></p>
-        </div>
-        <p style="text-align: center;" id="trackPercentComplete"></p>
       </div>
 
 

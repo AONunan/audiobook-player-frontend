@@ -18,13 +18,14 @@ audio {
 /* audio::-webkit-media-controls-panel {
 } */
 
-.mediaButtonRow {
-  display: flex;
+#mediaButtons {
+  margin: auto;
+  max-width: 1000px;
+  align-items: stretch;
 }
 
-#mediaButtons {
-  width: 100%;
-  align-items: stretch;
+.mediaButtonRow {
+  display: flex;
 }
 
 .mediaButton {

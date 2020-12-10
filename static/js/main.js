@@ -2,6 +2,37 @@ let pauseTimestamp = 0; // The timestamp of when the media player was paused by 
 let currentlyPlaying = {};
 let library = {};
 
+document.addEventListener("keydown", function(event) {
+  // console.log(event);
+
+  switch (event.key) {
+
+    case "ArrowLeft":
+      mediaControls('previousTrack');
+      break;
+
+    case "j":
+      mediaControls('rewind');
+      break;
+
+    case "k":
+      mediaControls('togglePlayPause');
+      break;
+
+    case "l":
+      mediaControls('fastForward');
+      break;
+
+    case "ArrowRight":
+      mediaControls('nextTrack');
+      break;
+
+    default:
+      console.log("No matching actions found.");
+  }
+});
+
+
 function setInitialValues(author, book, track, initialTimestamp, myLibrary) {
   // Set global values
   currentlyPlaying["author"] = author;
@@ -19,7 +50,7 @@ function setInitialValues(author, book, track, initialTimestamp, myLibrary) {
   document.getElementById(`${author}/${book}/${track}`).style.color = "white";
 
   // Set timestamp in media player
-  document.getElementById("player").currentTime = initialTimestamp; // Rewind 10 seconds from saved time
+  document.getElementById("player").currentTime = initialTimestamp;
   displayCurrentPlayingInfo();
 
   // Display percent played so far
@@ -73,7 +104,6 @@ function playTrack(author, book, track) {
   let player = document.getElementById("player");
   player.src = trackUriEncoded;
   player.play();
-
 }
 
 
@@ -133,11 +163,10 @@ function secondsToHms(d) {
   d = Number(d);
   var h = Math.floor(d / 3600);
   var m = Math.floor(d % 3600 / 60);
-  var s = Math.floor(d % 3600 % 60);
 
   var hDisplay = h > 0 ? h + " hr " : "";
   var mDisplay = m + " min";
-  return hDisplay + mDisplay; 
+  return hDisplay + mDisplay;
 }
 
 
@@ -157,14 +186,14 @@ function displayPercentage() {
 
   document.getElementById("progressBarPercent").style.width = `${trackPercentCompleteUnrounded}%`;
   document.getElementById("trackPercentComplete").innerHTML = `${secondsToHms(currentTime)} / ${secondsToHms(currentTrackLength)} (${trackPercentComplete}%), ${secondsToHms(currentTrackLength - currentTime)} remaining`;
-  
+
   // Get total percentage complete of book
-  
+
   let totalSecondsComplete = 0;
   let bookLengthSeconds = library[currentlyPlaying["author"]][currentlyPlaying["book"]]["book_length_seconds"];
   let i = 0;
   let tracks = library[currentlyPlaying["author"]][currentlyPlaying["book"]]['tracks'];
-  
+
   for (i = 0; i < tracks.length; i++) {
     // Sum up all track lengths until we get to current track
     if (tracks[i]['track_filename'] === currentlyPlaying["track"]) {
@@ -175,9 +204,9 @@ function displayPercentage() {
       totalSecondsComplete += tracks[i]['track_length_seconds'];
     }
   }
-  
+
   let bookPercentComplete = Math.round(totalSecondsComplete / bookLengthSeconds * 100);
-  
+
   document.getElementById("bookPercentComplete").innerHTML = `${secondsToHms(totalSecondsComplete)} / ${secondsToHms(bookLengthSeconds)} (${bookPercentComplete}%), ${secondsToHms(bookLengthSeconds - totalSecondsComplete)} remaining`;
 }
 
@@ -186,7 +215,7 @@ function openSidebar() {
   document.getElementById("main").style.pointerEvents = "none";
 }
 
-/* Set the width of the sidebar to 0 and the left margin of the page content to 0 */
+// Set the width of the sidebar to 0 and the left margin of the page content to 0
 function closeSidebar() {
   document.getElementById("mySidebar").style.width = "0";
   document.getElementById("main").style.pointerEvents = "all";
@@ -205,43 +234,25 @@ function mediaControls(action) {
 
   switch (action) {
 
-    case "togglePlayPause":
-      togglePlayPause();
+    case "previousTrack":
+      playPreviousTrack();
       break;
-
-    case "stop":
-      mediaPlayer.pause();
-      document.getElementById("playPauseButton").innerHTML = "▶️";
-      document.getElementById("footer").style.display = "none";
-      break;
-
 
     case "rewind":
       mediaPlayer.currentTime -= 15; // Skip back 15 seconds
+      break;
+
+    case "togglePlayPause":
+      togglePlayPause();
       break;
 
     case "fastForward":
       mediaPlayer.currentTime += 15; // Skip forward 15 seconds
       break;
 
-
-    case "rewind10Percent":
-      mediaPlayer.currentTime -= (mediaPlayer.duration / 10);
-      break;
-
-    case "fastForward10Percent":
-      mediaPlayer.currentTime += (mediaPlayer.duration / 10);
-      break;
-
-
-    case "previousTrack":
-      playPreviousTrack();
-      break;
-
     case "nextTrack":
       playNextTrack();
       break;
-
 
     default:
       console.log("No matching actions found.");
@@ -265,7 +276,6 @@ function playPreviousTrack() {
   } else { // If 10 seconds or more into track, reset time to 0 but stay on same track
     mediaPlayer.currentTime = 0;
   }
-
 }
 
 function playNextTrack() {
@@ -277,8 +287,6 @@ function playNextTrack() {
   } else {
     console.log('Already on last track. Not changing.');
   }
-
-
 }
 
 function togglePlayPause() {
@@ -306,5 +314,4 @@ function togglePlayPause() {
     pauseTimestamp = Date.now() / 1000; // Log the time the media player was paused
     playPauseButton.innerHTML = "▶️";
   }
-
 }

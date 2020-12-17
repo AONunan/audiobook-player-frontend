@@ -7,8 +7,12 @@ audio {
   bottom: 0;
   width: 100%;
   
+  background-image: linear-gradient(to bottom right, rgb(65, 0, 0), rgb(0, 0, 0));;
+  /* background: linear-gradient(to top, rgb(117, 0, 0), rgb(60, 48, 167))); */
   /* background: linear-gradient(to top, rgb(117, 0, 0), transparent 100%); */
-  background-color: rgb(36, 36, 36);
+  /* background-color: rgb(54, 0, 0); */
+
+  box-shadow: 0px 0px 15px 5px black;
 }
 
 #player {

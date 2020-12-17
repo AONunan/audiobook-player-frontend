@@ -61,7 +61,7 @@ window.setInterval(function () {
   postCurrentTrackInfo();
   displayPercentage();
 
-}, 10000); // Loop every 10 seconds
+}, 5000); // Loop every 5 seconds
 
 function playTrack(author, book, track) {
   // Update global values
@@ -184,16 +184,18 @@ function displayPercentage() {
     trackPercentComplete = 0;
   }
 
-  document.getElementById("progressBarPercent").style.width = `${trackPercentCompleteUnrounded}%`;
-  document.getElementById("trackPercentComplete").innerHTML = `${secondsToHms(currentTime)} / ${secondsToHms(currentTrackLength)} (${trackPercentComplete}%), ${secondsToHms(currentTrackLength - currentTime)} remaining`;
-
+  document.getElementById("trackProgressBar").style.width = `${trackPercentCompleteUnrounded}%`;
+  document.getElementById("trackProgressBarComplete").innerHTML = secondsToHms(currentTime);
+  document.getElementById("trackProgressBarPercentage").innerHTML = `${trackPercentComplete}% of ${secondsToHms(currentTrackLength)}`;
+  document.getElementById("trackProgressBarRemaining").innerHTML = `-${secondsToHms(currentTrackLength - currentTime)}`;
+  
   // Get total percentage complete of book
-
+  
   let totalSecondsComplete = 0;
   let bookLengthSeconds = library[currentlyPlaying["author"]][currentlyPlaying["book"]]["book_length_seconds"];
   let i = 0;
   let tracks = library[currentlyPlaying["author"]][currentlyPlaying["book"]]['tracks'];
-
+  
   for (i = 0; i < tracks.length; i++) {
     // Sum up all track lengths until we get to current track
     if (tracks[i]['track_filename'] === currentlyPlaying["track"]) {
@@ -204,10 +206,13 @@ function displayPercentage() {
       totalSecondsComplete += tracks[i]['track_length_seconds'];
     }
   }
-
+  
   let bookPercentComplete = Math.round(totalSecondsComplete / bookLengthSeconds * 100);
-
-  document.getElementById("bookPercentComplete").innerHTML = `${secondsToHms(totalSecondsComplete)} / ${secondsToHms(bookLengthSeconds)} (${bookPercentComplete}%), ${secondsToHms(bookLengthSeconds - totalSecondsComplete)} remaining`;
+  
+  document.getElementById("bookProgressBar").style.width = `${bookPercentComplete}%`;
+  document.getElementById("bookProgressBarComplete").innerHTML = secondsToHms(totalSecondsComplete);
+  document.getElementById("bookProgressBarPercentage").innerHTML = `${bookPercentComplete}% of ${secondsToHms(bookLengthSeconds)}`;
+  document.getElementById("bookProgressBarRemaining").innerHTML = `-${secondsToHms(bookLengthSeconds - totalSecondsComplete)}`;
 }
 
 function openSidebar() {

@@ -18,6 +18,16 @@ def index():
     current_track=get_current_track()
   )
 
+@app.route('/bookshelf')
+def bookshelf():
+  def get_library():
+    return requests.get(url='http://192.168.1.2:5200/get_library').json()
+
+  return render_template(
+    'bookshelf.html',
+    library=get_library(),
+  )
+
 @app.route('/test')
 def test():
   return "Web app running"
